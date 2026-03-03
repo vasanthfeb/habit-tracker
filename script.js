@@ -165,18 +165,22 @@ fetch(SCRIPT_URL)
 data.slice(1).forEach(row=>{
 
 let habit=row[1]
-let day=row[2]
+let day=parseInt(row[2])
 let status=row[3]
 
 let habitIndex=habits.indexOf(habit)
 
-if(habitIndex>-1 && status==="true"){
+if(habitIndex>-1 && status===true || status==="true"){
 
 let id=`h${habitIndex}d${day}`
 
 let cb=document.getElementById(id)
 
-if(cb) cb.checked=true
+if(cb){
+
+cb.checked=true
+
+}
 
 }
 
