@@ -24,7 +24,7 @@ const monthSelect=document.getElementById("month")
 const daysRow=document.getElementById("daysRow")
 const body=document.getElementById("habitBody")
 
-// year dropdown
+// create year dropdown
 for(let y=2024;y<=2035;y++){
 
 let op=document.createElement("option")
@@ -62,11 +62,9 @@ let cell=document.createElement("td")
 
 let cb=document.createElement("input")
 cb.type="checkbox"
-
 cb.id=`h${h}d${d}`
 
 cell.appendChild(cb)
-
 tr.appendChild(cell)
 
 }
@@ -85,22 +83,22 @@ const today=new Date()
 yearSelect.value=today.getFullYear()
 monthSelect.value=today.getMonth()
 
-// send data to google sheet
-function sendToSheet(habit,status){
+// send data to Google Sheet
+function sendToSheet(habit,day,status){
 
 fetch(SCRIPT_URL,{
 method:"POST",
+mode:"no-cors",
 headers:{
 "Content-Type":"application/json"
 },
 body:JSON.stringify({
 date:new Date().toISOString(),
 habit:habit,
+day:day,
 status:status
 })
 })
-.then(res=>console.log("sent"))
-.catch(err=>console.log(err))
 
 }
 
@@ -119,8 +117,8 @@ let status=document.getElementById(id).checked
 
 data[id]=status
 
-// send to google sheet
-sendToSheet(h,status)
+// send to Google Sheet
+sendToSheet(h,d,status)
 
 }
 
@@ -136,7 +134,7 @@ updateCharts()
 
 }
 
-// load data
+// load saved data
 function loadData(){
 
 let key=`habit-${yearSelect.value}-${monthSelect.value}`
@@ -201,7 +199,7 @@ loadData()
 
 }
 
-// today
+// go to today
 function goToday(){
 
 const t=new Date()
