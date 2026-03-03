@@ -15,6 +15,8 @@ const habits=[
 "Healthy Food"
 ]
 
+const SCRIPT_URL="https://script.google.com/macros/s/AKfycbwCDD7_F5VRxEHj7_iciMkLziJMt6fctVkhvPJ-syoDqe6sXn_f79y_d8-f4uC3gaW/exec"
+
 const yearSelect=document.getElementById("year")
 const monthSelect=document.getElementById("month")
 
@@ -74,12 +76,23 @@ body.appendChild(tr)
 
 buildTable()
 
-
 const today=new Date()
 
 yearSelect.value=today.getFullYear()
 monthSelect.value=today.getMonth()
 
+function sendToSheet(habit,status){
+
+fetch(SCRIPT_URL,{
+method:"POST",
+body:JSON.stringify({
+date:new Date().toISOString(),
+habit:habit,
+status:status
+})
+})
+
+}
 
 function saveData(){
 
@@ -91,7 +104,11 @@ for(let d=1;d<=31;d++){
 
 let id=`h${hi}d${d}`
 
-data[id]=document.getElementById(id).checked
+let status=document.getElementById(id).checked
+
+data[id]=status
+
+sendToSheet(h,status)
 
 }
 
@@ -101,12 +118,11 @@ let key=`habit-${yearSelect.value}-${monthSelect.value}`
 
 localStorage.setItem(key,JSON.stringify(data))
 
-alert("Saved")
+alert("Saved Successfully")
 
 updateCharts()
 
 }
-
 
 function loadData(){
 
@@ -127,7 +143,6 @@ if(el) el.checked=data[id]
 updateCharts()
 
 }
-
 
 function prevMonth(){
 
@@ -150,7 +165,6 @@ loadData()
 
 }
 
-
 function nextMonth(){
 
 let m=parseInt(monthSelect.value)
@@ -172,7 +186,6 @@ loadData()
 
 }
 
-
 function goToday(){
 
 const t=new Date()
@@ -184,11 +197,9 @@ loadData()
 
 }
 
-
 let dailyChart
 let weeklyChart
 let overallChart
-
 
 function updateCharts(){
 
@@ -233,7 +244,6 @@ habitStats()
 
 }
 
-
 function drawCharts(daily,weeks,done,total){
 
 if(dailyChart) dailyChart.destroy()
@@ -241,40 +251,30 @@ if(weeklyChart) weeklyChart.destroy()
 if(overallChart) overallChart.destroy()
 
 dailyChart=new Chart(document.getElementById("dailyChart"),{
-
 type:"bar",
-
 data:{
 labels:[...Array(31).keys()].map(i=>i+1),
 datasets:[{data:daily}]
 }
-
 })
 
 weeklyChart=new Chart(document.getElementById("weeklyChart"),{
-
 type:"bar",
-
 data:{
 labels:["W1","W2","W3","W4"],
 datasets:[{data:weeks}]
 }
-
 })
 
 overallChart=new Chart(document.getElementById("overallChart"),{
-
 type:"doughnut",
-
 data:{
 labels:["Done","Miss"],
 datasets:[{data:[done,total-done]}]
 }
-
 })
 
 }
-
 
 function calculateStreak(){
 
@@ -307,7 +307,6 @@ html+=`<p>${habit} : ${streak} days</p>`
 document.getElementById("streakBox").innerHTML=html
 
 }
-
 
 function habitStats(){
 
