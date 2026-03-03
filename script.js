@@ -15,7 +15,7 @@ const habits=[
 "Healthy Food"
 ]
 
-// Google Apps Script URL
+// YOUR GOOGLE SCRIPT URL
 const SCRIPT_URL="https://script.google.com/macros/s/AKfycbwF26crQpzvNz_RbcobayWTQmJ4m_zOyMS9tORlBfeYW8aEvZHj5hD3ncQKxqK_bBjo/exec"
 
 const yearSelect=document.getElementById("year")
@@ -62,6 +62,7 @@ let cell=document.createElement("td")
 
 let cb=document.createElement("input")
 cb.type="checkbox"
+
 cb.id=`h${h}d${d}`
 
 cell.appendChild(cb)
@@ -83,7 +84,7 @@ const today=new Date()
 yearSelect.value=today.getFullYear()
 monthSelect.value=today.getMonth()
 
-// send data to Google Sheet
+// SEND DATA TO GOOGLE SHEET
 function sendToSheet(habit,day,status){
 
 fetch(SCRIPT_URL,{
@@ -102,7 +103,7 @@ status:status
 
 }
 
-// save data
+// SAVE DATA
 function saveData(){
 
 let data={}
@@ -117,7 +118,6 @@ let status=document.getElementById(id).checked
 
 data[id]=status
 
-// send to Google Sheet
 sendToSheet(h,d,status)
 
 }
@@ -134,7 +134,7 @@ updateCharts()
 
 }
 
-// load saved data
+// LOAD LOCAL DATA
 function loadData(){
 
 let key=`habit-${yearSelect.value}-${monthSelect.value}`
@@ -152,6 +152,37 @@ if(el) el.checked=data[id]
 })
 
 updateCharts()
+
+}
+
+// LOAD FROM GOOGLE SHEET
+function loadFromSheet(){
+
+fetch(SCRIPT_URL)
+.then(res=>res.json())
+.then(data=>{
+
+data.slice(1).forEach(row=>{
+
+let habit=row[1]
+let day=row[2]
+let status=row[3]
+
+let habitIndex=habits.indexOf(habit)
+
+if(habitIndex>-1 && status==="true"){
+
+let id=`h${habitIndex}d${day}`
+
+let cb=document.getElementById(id)
+
+if(cb) cb.checked=true
+
+}
+
+})
+
+})
 
 }
 
@@ -199,7 +230,7 @@ loadData()
 
 }
 
-// go to today
+// today
 function goToday(){
 
 const t=new Date()
@@ -215,7 +246,7 @@ let dailyChart
 let weeklyChart
 let overallChart
 
-// update charts
+// UPDATE CHARTS
 function updateCharts(){
 
 let daily=[]
@@ -259,7 +290,7 @@ habitStats()
 
 }
 
-// draw charts
+// DRAW CHARTS
 function drawCharts(daily,weeks,done,total){
 
 if(dailyChart) dailyChart.destroy()
@@ -300,7 +331,7 @@ data:[done,total-done]
 
 }
 
-// streak counter
+// STREAK
 function calculateStreak(){
 
 let html=""
@@ -333,7 +364,7 @@ document.getElementById("streakBox").innerHTML=html
 
 }
 
-// habit success %
+// HABIT %
 function habitStats(){
 
 let tbody=document.querySelector("#habitStats tbody")
@@ -372,4 +403,6 @@ tbody.innerHTML+=`
 
 }
 
+// RUN ON LOAD
 loadData()
+loadFromSheet()
