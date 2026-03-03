@@ -15,6 +15,7 @@ const habits=[
 "Healthy Food"
 ]
 
+// Google Apps Script URL
 const SCRIPT_URL="https://script.google.com/macros/s/AKfycbwCDD7_F5VRxEHj7_iciMkLziJMt6fctVkhvPJ-syoDqe6sXn_f79y_d8-f4uC3gaW/exec"
 
 const yearSelect=document.getElementById("year")
@@ -23,6 +24,7 @@ const monthSelect=document.getElementById("month")
 const daysRow=document.getElementById("daysRow")
 const body=document.getElementById("habitBody")
 
+// year dropdown
 for(let y=2024;y<=2035;y++){
 
 let op=document.createElement("option")
@@ -32,6 +34,7 @@ yearSelect.appendChild(op)
 
 }
 
+// build habit table
 function buildTable(){
 
 daysRow.innerHTML="<th>Habit</th>"
@@ -76,24 +79,32 @@ body.appendChild(tr)
 
 buildTable()
 
+// current month auto select
 const today=new Date()
 
 yearSelect.value=today.getFullYear()
 monthSelect.value=today.getMonth()
 
+// send data to google sheet
 function sendToSheet(habit,status){
 
 fetch(SCRIPT_URL,{
 method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
 body:JSON.stringify({
 date:new Date().toISOString(),
 habit:habit,
 status:status
 })
 })
+.then(res=>console.log("sent"))
+.catch(err=>console.log(err))
 
 }
 
+// save data
 function saveData(){
 
 let data={}
@@ -108,6 +119,7 @@ let status=document.getElementById(id).checked
 
 data[id]=status
 
+// send to google sheet
 sendToSheet(h,status)
 
 }
@@ -124,6 +136,7 @@ updateCharts()
 
 }
 
+// load data
 function loadData(){
 
 let key=`habit-${yearSelect.value}-${monthSelect.value}`
@@ -144,6 +157,7 @@ updateCharts()
 
 }
 
+// previous month
 function prevMonth(){
 
 let m=parseInt(monthSelect.value)
@@ -165,6 +179,7 @@ loadData()
 
 }
 
+// next month
 function nextMonth(){
 
 let m=parseInt(monthSelect.value)
@@ -186,6 +201,7 @@ loadData()
 
 }
 
+// today
 function goToday(){
 
 const t=new Date()
@@ -201,6 +217,7 @@ let dailyChart
 let weeklyChart
 let overallChart
 
+// update charts
 function updateCharts(){
 
 let daily=[]
@@ -244,6 +261,7 @@ habitStats()
 
 }
 
+// draw charts
 function drawCharts(daily,weeks,done,total){
 
 if(dailyChart) dailyChart.destroy()
@@ -254,15 +272,21 @@ dailyChart=new Chart(document.getElementById("dailyChart"),{
 type:"bar",
 data:{
 labels:[...Array(31).keys()].map(i=>i+1),
-datasets:[{data:daily}]
+datasets:[{
+label:"Daily Habits",
+data:daily
+}]
 }
 })
 
 weeklyChart=new Chart(document.getElementById("weeklyChart"),{
 type:"bar",
 data:{
-labels:["W1","W2","W3","W4"],
-datasets:[{data:weeks}]
+labels:["Week1","Week2","Week3","Week4"],
+datasets:[{
+label:"Weekly Score",
+data:weeks
+}]
 }
 })
 
@@ -270,12 +294,15 @@ overallChart=new Chart(document.getElementById("overallChart"),{
 type:"doughnut",
 data:{
 labels:["Done","Miss"],
-datasets:[{data:[done,total-done]}]
+datasets:[{
+data:[done,total-done]
+}]
 }
 })
 
 }
 
+// streak counter
 function calculateStreak(){
 
 let html=""
@@ -308,6 +335,7 @@ document.getElementById("streakBox").innerHTML=html
 
 }
 
+// habit success %
 function habitStats(){
 
 let tbody=document.querySelector("#habitStats tbody")
