@@ -16,7 +16,7 @@ const habits=[
 ]
 
 // Google Apps Script URL
-const SCRIPT_URL="https://script.google.com/macros/s/AKfycbwCDD7_F5VRxEHj7_iciMkLziJMt6fctVkhvPJ-syoDqe6sXn_f79y_d8-f4uC3gaW/exec"
+const SCRIPT_URL="https://script.google.com/macros/s/AKfycbwF26crQpzvNz_RbcobayWTQmJ4m_zOyMS9tORlBfeYW8aEvZHj5hD3ncQKxqK_bBjo/exec"
 
 const yearSelect=document.getElementById("year")
 const monthSelect=document.getElementById("month")
