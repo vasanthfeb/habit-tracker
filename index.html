@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Habit Tracker - Vasanth</title>
+
+<link rel="stylesheet" href="style.css">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1><i>Habit Discipline Tracker</i></h1>
+
+<div class="controls">
+
+<button onclick="prevMonth()">◀ Prev</button>
+
+<select id="year"></select>
+
+<select id="month">
+<option value="0">Jan</option>
+<option value="1">Feb</option>
+<option value="2">Mar</option>
+<option value="3">Apr</option>
+<option value="4">May</option>
+<option value="5">Jun</option>
+<option value="6">Jul</option>
+<option value="7">Aug</option>
+<option value="8">Sep</option>
+<option value="9">Oct</option>
+<option value="10">Nov</option>
+<option value="11">Dec</option>
+</select>
+
+<button onclick="nextMonth()">Next ▶</button>
+
+<button onclick="goToday()">Today</button>
+
+</div>
+
+
+<div class="charts">
+
+<div class="card">
+<h3>Daily Progress</h3>
+<canvas id="dailyChart"></canvas>
+</div>
+
+<div class="card">
+<h3>Weekly Progress</h3>
+<canvas id="weeklyChart"></canvas>
+</div>
+
+<div class="card">
+<h3>Overall Stats</h3>
+<canvas id="overallChart"></canvas>
+</div>
+
+</div>
+
+
+<h2>Habits</h2>
+
+<div class="tableWrap">
+
+<table id="habitTable">
+
+<thead>
+<tr id="daysRow">
+<th>Habit</th>
+</tr>
+</thead>
+
+<tbody id="habitBody"></tbody>
+
+</table>
+
+</div>
+
+
+<button class="saveBtn" onclick="saveData()">Save Progress</button>
+
+
+<h2>Habit Streak</h2>
+
+<div id="streakBox"></div>
+
+
+<h2>Habit Success %</h2>
+
+<table id="habitStats">
+
+<thead>
+<tr>
+<th>Habit</th>
+<th>Success %</th>
+</tr>
+</thead>
+
+<tbody></tbody>
+
+</table>
+
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
