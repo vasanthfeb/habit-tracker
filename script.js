@@ -124,16 +124,12 @@ let days=data[habit]
 
 Object.keys(days).forEach(day=>{
 
-if(days[day]){
-
 let index=habits.indexOf(habit)
 let id=`h${index}d${day}`
 
 let cb=document.getElementById(id)
 
-if(cb) cb.checked=true
-
-}
+if(cb) cb.checked=days[day]
 
 })
 
@@ -186,8 +182,8 @@ if(w<4) weeks[w]+=count
 
 drawCharts(daily,weeks,done,total)
 
-// IMPORTANT
 updateStreak()
+
 habitStats()
 
 }
@@ -233,7 +229,7 @@ data:[done,total-done]
 
 }
 
-// STREAK
+// HABIT STREAK (CORRECT LOGIC)
 function updateStreak(){
 
 let html=""
@@ -243,14 +239,14 @@ habits.forEach((habit,h)=>{
 let streak=0
 let maxDays=31
 
-for(let d=1;d<=31;d++){
+for(let d=31;d>=1;d--){
 
 let cb=document.getElementById(`h${h}d${d}`)
 
 if(cb && cb.checked){
 streak++
 }else{
-break
+if(streak>0) break
 }
 
 }
@@ -258,7 +254,9 @@ break
 let percent=(streak/maxDays)*100
 
 html+=`
+
 <div class="streakItem">
+
 <div class="streakTitle">${habit}</div>
 
 <div class="streakBar">
@@ -266,7 +264,9 @@ html+=`
 </div>
 
 <div class="streakText">${streak} day streak</div>
+
 </div>
+
 `
 
 })
@@ -275,7 +275,7 @@ document.getElementById("streakBox").innerHTML=html
 
 }
 
-// SUCCESS %
+// HABIT SUCCESS %
 function habitStats(){
 
 let tbody=document.querySelector("#habitStats tbody")

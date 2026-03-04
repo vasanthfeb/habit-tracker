@@ -4,6 +4,7 @@
 <head>
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Habit Tracker - Vasanth</title>
 
 <link rel="stylesheet" href="style.css">
@@ -18,6 +19,9 @@
 
 <h1><i>Habit Discipline Tracker</i></h1>
 
+
+<!-- CONTROLS -->
+
 <div class="controls">
 
 <button onclick="prevMonth()">◀ Prev</button>
@@ -25,6 +29,7 @@
 <select id="year"></select>
 
 <select id="month">
+
 <option value="0">Jan</option>
 <option value="1">Feb</option>
 <option value="2">Mar</option>
@@ -37,6 +42,7 @@
 <option value="9">Oct</option>
 <option value="10">Nov</option>
 <option value="11">Dec</option>
+
 </select>
 
 <button onclick="nextMonth()">Next ▶</button>
@@ -46,25 +52,42 @@
 </div>
 
 
+
+<!-- CHARTS -->
+
 <div class="charts">
 
 <div class="card">
+
 <h3>Daily Progress</h3>
+
 <canvas id="dailyChart"></canvas>
+
 </div>
 
+
 <div class="card">
+
 <h3>Weekly Progress</h3>
+
 <canvas id="weeklyChart"></canvas>
+
 </div>
+
 
 <div class="card">
+
 <h3>Overall Stats</h3>
+
 <canvas id="overallChart"></canvas>
-</div>
 
 </div>
 
+</div>
+
+
+
+<!-- HABIT TABLE -->
 
 <h2>Habits</h2>
 
@@ -73,9 +96,13 @@
 <table id="habitTable">
 
 <thead>
+
 <tr id="daysRow">
+
 <th>Habit</th>
+
 </tr>
+
 </thead>
 
 <tbody id="habitBody"></tbody>
@@ -85,27 +112,52 @@
 </div>
 
 
+
 <button class="saveBtn" onclick="saveData()">Save Progress</button>
 
 
+
+<!-- STREAK + SUCCESS SECTION -->
+
+<div class="bottomGrid">
+
+
+<!-- HABIT STREAK -->
+
+<div class="bottomCard">
+
 <h2>Habit Streak</h2>
 
-
-
 <div class="scrollWrap">
+
 <div id="streakBox"></div>
+
 </div>
+
+</div>
+
+
+
+<!-- HABIT SUCCESS -->
+
+<div class="bottomCard">
 
 <h2>Habit Success %</h2>
 
 <div class="scrollWrap">
+
 <table id="habitStats">
 
 <thead>
+
 <tr>
+
 <th>Habit</th>
+
 <th>Success %</th>
+
 </tr>
+
 </thead>
 
 <tbody></tbody>
@@ -114,8 +166,17 @@
 
 </div>
 
+</div>
 
-<!-- FIREBASE FIRST -->
+</div>
+
+
+
+</div>
+
+
+
+<!-- FIREBASE -->
 
 <script type="module">
 
@@ -123,16 +184,25 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/fireba
 import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-database.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBovv2JS2egaK-kvPTX3y_uBrYvsQ0cB4Q",
-  authDomain: "habit-tracker-f294b.firebaseapp.com",
-  databaseURL: "https://habit-tracker-f294b-default-rtdb.firebaseio.com",
-  projectId: "habit-tracker-f294b",
-  storageBucket: "habit-tracker-f294b.firebasestorage.app",
-  messagingSenderId: "1003014872273",
-  appId: "1:1003014872273:web:f2bbb8d8cc7a041c9d79f0"
+
+apiKey: "AIzaSyBovv2JS2egaK-kvPTX3y_uBrYvsQ0cB4Q",
+
+authDomain: "habit-tracker-f294b.firebaseapp.com",
+
+databaseURL: "https://habit-tracker-f294b-default-rtdb.firebaseio.com",
+
+projectId: "habit-tracker-f294b",
+
+storageBucket: "habit-tracker-f294b.firebasestorage.app",
+
+messagingSenderId: "1003014872273",
+
+appId: "1:1003014872273:web:f2bbb8d8cc7a041c9d79f0"
+
 };
 
 const app = initializeApp(firebaseConfig);
+
 const db = getDatabase(app);
 
 window.firebaseDB = db;
@@ -143,9 +213,11 @@ window.firebaseOnValue = onValue;
 </script>
 
 
-<!-- SCRIPT AFTER FIREBASE -->
+
+<!-- MAIN SCRIPT -->
 
 <script type="module" src="script.js"></script>
+
 
 </body>
 </html>

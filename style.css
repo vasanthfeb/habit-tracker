@@ -36,7 +36,45 @@ background:#eee;
 border-radius:10px;
 overflow:hidden;
 }
+/* sticky habit column */
 
+#habitTable th:first-child,
+#habitTable td:first-child{
+position: sticky;
+left: 0;
+background: #2b2727;
+z-index: 2;
+}
+
+/* header habit column */
+
+#habitTable thead th:first-child{
+z-index: 3;
+background: #222222;
+}
+.bottomGrid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:25px;
+margin-top:40px;
+}
+
+.bottomCard{
+background:#071a2f;
+padding:20px;
+border-radius:10px;
+}
+
+@media(max-width:768px){
+.bottomGrid{
+grid-template-columns:1fr;
+}
+}
+/* mobile scroll */
+
+.tableWrap{
+overflow-x: auto;
+}
 .streakFill{
 height:100%;
 background:#4caf50;
