@@ -19,7 +19,27 @@ h1{
 text-align:center;
 
 }
+.scrollWrap::-webkit-scrollbar{
+height:6px;
+}
 
+.scrollWrap::-webkit-scrollbar-thumb{
+background:#888;
+border-radius:10px;
+}
+.scrollWrap{
+width:100%;
+overflow-x:auto;
+padding-bottom:10px;
+}
+
+.scrollWrap table{
+min-width:600px;
+}
+
+#streakBox{
+min-width:600px;
+}
 .controls{
 
 display:flex;
