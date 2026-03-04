@@ -21,28 +21,24 @@ const monthSelect=document.getElementById("month")
 const daysRow=document.getElementById("daysRow")
 const body=document.getElementById("habitBody")
 
-// create year dropdown
+// YEAR DROPDOWN
 for(let y=2024;y<=2035;y++){
-
 let op=document.createElement("option")
 op.value=y
 op.text=y
 yearSelect.appendChild(op)
-
 }
 
-// build habit table
+// BUILD TABLE
 function buildTable(){
 
 daysRow.innerHTML="<th>Habit</th>"
 body.innerHTML=""
 
 for(let i=1;i<=31;i++){
-
 let th=document.createElement("th")
 th.innerText=i
 daysRow.appendChild(th)
-
 }
 
 habits.forEach((habit,h)=>{
@@ -61,6 +57,10 @@ let cb=document.createElement("input")
 cb.type="checkbox"
 cb.id=`h${h}d${d}`
 
+cb.addEventListener("change",()=>{
+updateCharts()
+})
+
 cell.appendChild(cb)
 tr.appendChild(cell)
 
@@ -74,15 +74,13 @@ body.appendChild(tr)
 
 buildTable()
 
-// current month
+// CURRENT MONTH
 const today=new Date()
 yearSelect.value=today.getFullYear()
 monthSelect.value=today.getMonth()
 
 // SAVE DATA
 function saveData(){
-
-console.log("Saving habits to Firebase")
 
 habits.forEach((habit,h)=>{
 
@@ -105,6 +103,7 @@ status
 })
 
 alert("Saved Successfully")
+updateCharts()
 
 }
 
@@ -118,7 +117,6 @@ window.firebaseRef(window.firebaseDB,"habits"),
 (snapshot)=>{
 
 let data=snapshot.val()
-
 if(!data) return
 
 Object.keys(data).forEach(habit=>{
@@ -133,6 +131,7 @@ let index=habits.indexOf(habit)
 let id=`h${index}d${day}`
 
 let cb=document.getElementById(id)
+
 if(cb) cb.checked=true
 
 }
@@ -141,11 +140,99 @@ if(cb) cb.checked=true
 
 })
 
+updateCharts()
+
 })
 
 }
 
-// PREVIOUS MONTH
+// CHART VARIABLES
+let dailyChart
+let weeklyChart
+let overallChart
+
+// UPDATE CHARTS
+function updateCharts(){
+
+let daily=[]
+let weeks=[0,0,0,0]
+
+let total=0
+let done=0
+
+for(let d=1;d<=31;d++){
+
+let count=0
+
+habits.forEach((h,hi)=>{
+
+let cb=document.getElementById(`h${hi}d${d}`)
+
+if(cb && cb.checked){
+
+count++
+done++
+
+}
+
+total++
+
+})
+
+daily.push(count)
+
+let w=Math.floor((d-1)/7)
+
+if(w<4) weeks[w]+=count
+
+}
+
+drawCharts(daily,weeks,done,total)
+
+}
+
+// DRAW CHARTS
+function drawCharts(daily,weeks,done,total){
+
+if(dailyChart) dailyChart.destroy()
+if(weeklyChart) weeklyChart.destroy()
+if(overallChart) overallChart.destroy()
+
+dailyChart=new Chart(document.getElementById("dailyChart"),{
+type:"bar",
+data:{
+labels:[...Array(31).keys()].map(i=>i+1),
+datasets:[{
+label:"Daily Progress",
+data:daily
+}]
+}
+})
+
+weeklyChart=new Chart(document.getElementById("weeklyChart"),{
+type:"bar",
+data:{
+labels:["Week1","Week2","Week3","Week4"],
+datasets:[{
+label:"Weekly Progress",
+data:weeks
+}]
+}
+})
+
+overallChart=new Chart(document.getElementById("overallChart"),{
+type:"doughnut",
+data:{
+labels:["Done","Miss"],
+datasets:[{
+data:[done,total-done]
+}]
+}
+})
+
+}
+
+// MONTH NAVIGATION
 function prevMonth(){
 
 let m=parseInt(monthSelect.value)
@@ -154,10 +241,8 @@ let y=parseInt(yearSelect.value)
 m--
 
 if(m<0){
-
 m=11
 y--
-
 }
 
 monthSelect.value=m
@@ -165,7 +250,6 @@ yearSelect.value=y
 
 }
 
-// NEXT MONTH
 function nextMonth(){
 
 let m=parseInt(monthSelect.value)
@@ -174,10 +258,8 @@ let y=parseInt(yearSelect.value)
 m++
 
 if(m>11){
-
 m=0
 y++
-
 }
 
 monthSelect.value=m
@@ -185,7 +267,6 @@ yearSelect.value=y
 
 }
 
-// TODAY
 function goToday(){
 
 const t=new Date()
@@ -195,14 +276,14 @@ monthSelect.value=t.getMonth()
 
 }
 
-// LOAD FIREBASE AFTER PAGE LOAD
+// PAGE LOAD
 window.addEventListener("load",()=>{
 
 loadFirebase()
 
 })
 
-// EXPOSE FUNCTIONS FOR HTML BUTTONS
+// GLOBAL FUNCTIONS FOR HTML
 window.saveData=saveData
 window.prevMonth=prevMonth
 window.nextMonth=nextMonth
