@@ -108,10 +108,10 @@
 
 </table>
 
-
 </div>
 
-<script type="module" src="script.js"></script>
+
+<!-- FIREBASE FIRST -->
 
 <script type="module">
 
@@ -131,12 +131,17 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// expose globally
 window.firebaseDB = db;
 window.firebaseRef = ref;
 window.firebaseSet = set;
 window.firebaseOnValue = onValue;
 
 </script>
+
+
+<!-- SCRIPT AFTER FIREBASE -->
+
+<script type="module" src="script.js"></script>
+
 </body>
 </html>

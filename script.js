@@ -21,22 +21,28 @@ const monthSelect=document.getElementById("month")
 const daysRow=document.getElementById("daysRow")
 const body=document.getElementById("habitBody")
 
+// create year dropdown
 for(let y=2024;y<=2035;y++){
+
 let op=document.createElement("option")
 op.value=y
 op.text=y
 yearSelect.appendChild(op)
+
 }
 
+// build habit table
 function buildTable(){
 
 daysRow.innerHTML="<th>Habit</th>"
 body.innerHTML=""
 
 for(let i=1;i<=31;i++){
+
 let th=document.createElement("th")
 th.innerText=i
 daysRow.appendChild(th)
+
 }
 
 habits.forEach((habit,h)=>{
@@ -68,12 +74,15 @@ body.appendChild(tr)
 
 buildTable()
 
+// current month
 const today=new Date()
 yearSelect.value=today.getFullYear()
 monthSelect.value=today.getMonth()
 
-// SAVE
+// SAVE DATA
 function saveData(){
+
+console.log("Saving habits to Firebase")
 
 habits.forEach((habit,h)=>{
 
@@ -95,11 +104,11 @@ status
 
 })
 
-alert("Saved")
+alert("Saved Successfully")
 
 }
 
-// LOAD
+// LOAD DATA FROM FIREBASE
 function loadFirebase(){
 
 if(!window.firebaseDB) return
@@ -109,6 +118,7 @@ window.firebaseRef(window.firebaseDB,"habits"),
 (snapshot)=>{
 
 let data=snapshot.val()
+
 if(!data) return
 
 Object.keys(data).forEach(habit=>{
@@ -135,4 +145,65 @@ if(cb) cb.checked=true
 
 }
 
-setTimeout(loadFirebase,1000)
+// PREVIOUS MONTH
+function prevMonth(){
+
+let m=parseInt(monthSelect.value)
+let y=parseInt(yearSelect.value)
+
+m--
+
+if(m<0){
+
+m=11
+y--
+
+}
+
+monthSelect.value=m
+yearSelect.value=y
+
+}
+
+// NEXT MONTH
+function nextMonth(){
+
+let m=parseInt(monthSelect.value)
+let y=parseInt(yearSelect.value)
+
+m++
+
+if(m>11){
+
+m=0
+y++
+
+}
+
+monthSelect.value=m
+yearSelect.value=y
+
+}
+
+// TODAY
+function goToday(){
+
+const t=new Date()
+
+yearSelect.value=t.getFullYear()
+monthSelect.value=t.getMonth()
+
+}
+
+// LOAD FIREBASE AFTER PAGE LOAD
+window.addEventListener("load",()=>{
+
+loadFirebase()
+
+})
+
+// EXPOSE FUNCTIONS FOR HTML BUTTONS
+window.saveData=saveData
+window.prevMonth=prevMonth
+window.nextMonth=nextMonth
+window.goToday=goToday
