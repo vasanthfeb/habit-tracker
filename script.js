@@ -17,7 +17,6 @@ const habits=[
 
 const yearSelect=document.getElementById("year")
 const monthSelect=document.getElementById("month")
-
 const daysRow=document.getElementById("daysRow")
 const body=document.getElementById("habitBody")
 
@@ -169,10 +168,8 @@ habits.forEach((h,hi)=>{
 let cb=document.getElementById(`h${hi}d${d}`)
 
 if(cb && cb.checked){
-
 count++
 done++
-
 }
 
 total++
@@ -188,6 +185,10 @@ if(w<4) weeks[w]+=count
 }
 
 drawCharts(daily,weeks,done,total)
+
+// IMPORTANT
+updateStreak()
+habitStats()
 
 }
 
@@ -228,6 +229,84 @@ datasets:[{
 data:[done,total-done]
 }]
 }
+})
+
+}
+
+// STREAK
+function updateStreak(){
+
+let html=""
+
+habits.forEach((habit,h)=>{
+
+let streak=0
+let maxDays=31
+
+for(let d=1;d<=31;d++){
+
+let cb=document.getElementById(`h${h}d${d}`)
+
+if(cb && cb.checked){
+streak++
+}else{
+break
+}
+
+}
+
+let percent=(streak/maxDays)*100
+
+html+=`
+<div class="streakItem">
+<div class="streakTitle">${habit}</div>
+
+<div class="streakBar">
+<div class="streakFill" style="width:${percent}%"></div>
+</div>
+
+<div class="streakText">${streak} day streak</div>
+</div>
+`
+
+})
+
+document.getElementById("streakBox").innerHTML=html
+
+}
+
+// SUCCESS %
+function habitStats(){
+
+let tbody=document.querySelector("#habitStats tbody")
+
+tbody.innerHTML=""
+
+habits.forEach((habit,h)=>{
+
+let total=0
+let done=0
+
+for(let d=1;d<=31;d++){
+
+let cb=document.getElementById(`h${h}d${d}`)
+
+if(cb){
+total++
+if(cb.checked) done++
+}
+
+}
+
+let percent=Math.round((done/total)*100)
+
+tbody.innerHTML+=`
+<tr>
+<td>${habit}</td>
+<td>${percent}%</td>
+</tr>
+`
+
 })
 
 }
@@ -278,56 +357,11 @@ monthSelect.value=t.getMonth()
 
 // PAGE LOAD
 window.addEventListener("load",()=>{
-
 loadFirebase()
-
 })
 
-// GLOBAL FUNCTIONS FOR HTML
+// GLOBAL FUNCTIONS
 window.saveData=saveData
 window.prevMonth=prevMonth
 window.nextMonth=nextMonth
 window.goToday=goToday
-
-function updateStreak(){
-
-let html=""
-
-habits.forEach((habit,h)=>{
-
-let streak=0
-let maxDays=31
-
-for(let d=1;d<=31;d++){
-
-let cb=document.getElementById(`h${h}d${d}`)
-
-if(cb && cb.checked){
-streak++
-}else{
-break
-}
-
-}
-
-let percent=(streak/maxDays)*100
-
-html+=`
-<div class="streakItem">
-
-<div class="streakTitle">${habit}</div>
-
-<div class="streakBar">
-<div class="streakFill" style="width:${percent}%"></div>
-</div>
-
-<div class="streakText">${streak} day streak</div>
-
-</div>
-`
-
-})
-
-document.getElementById("streakBox").innerHTML=html
-
-}
