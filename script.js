@@ -288,3 +288,46 @@ window.saveData=saveData
 window.prevMonth=prevMonth
 window.nextMonth=nextMonth
 window.goToday=goToday
+
+function updateStreak(){
+
+let html=""
+
+habits.forEach((habit,h)=>{
+
+let streak=0
+let maxDays=31
+
+for(let d=1;d<=31;d++){
+
+let cb=document.getElementById(`h${h}d${d}`)
+
+if(cb && cb.checked){
+streak++
+}else{
+break
+}
+
+}
+
+let percent=(streak/maxDays)*100
+
+html+=`
+<div class="streakItem">
+
+<div class="streakTitle">${habit}</div>
+
+<div class="streakBar">
+<div class="streakFill" style="width:${percent}%"></div>
+</div>
+
+<div class="streakText">${streak} day streak</div>
+
+</div>
+`
+
+})
+
+document.getElementById("streakBox").innerHTML=html
+
+}
