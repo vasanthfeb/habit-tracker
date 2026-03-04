@@ -15,9 +15,6 @@ const habits=[
 "Healthy Food"
 ]
 
-// YOUR GOOGLE SCRIPT URL
-const SCRIPT_URL="https://script.google.com/macros/s/AKfycbwF26crQpzvNz_RbcobayWTQmJ4m_zOyMS9tORlBfeYW8aEvZHj5hD3ncQKxqK_bBjo/exec"
-
 const yearSelect=document.getElementById("year")
 const monthSelect=document.getElementById("month")
 
@@ -34,7 +31,7 @@ yearSelect.appendChild(op)
 
 }
 
-// build habit table
+// build table
 function buildTable(){
 
 daysRow.innerHTML="<th>Habit</th>"
@@ -62,7 +59,6 @@ let cell=document.createElement("td")
 
 let cb=document.createElement("input")
 cb.type="checkbox"
-
 cb.id=`h${h}d${d}`
 
 cell.appendChild(cb)
@@ -78,30 +74,11 @@ body.appendChild(tr)
 
 buildTable()
 
-// current month auto select
+// current month
 const today=new Date()
 
 yearSelect.value=today.getFullYear()
 monthSelect.value=today.getMonth()
-
-// SEND DATA TO GOOGLE SHEET
-function sendToSheet(habit,day,status){
-
-fetch(SCRIPT_URL,{
-method:"POST",
-mode:"no-cors",
-headers:{
-"Content-Type":"application/json"
-},
-body:JSON.stringify({
-date:new Date().toISOString(),
-habit:habit,
-day:day,
-status:status
-})
-})
-
-}
 
 // SAVE DATA
 function saveData(){
@@ -118,7 +95,10 @@ let status=document.getElementById(id).checked
 
 data[id]=status
 
-sendToSheet(h,d,status)
+// Firebase save
+if(typeof saveHabit==="function"){
+saveHabit(h,d,status)
+}
 
 }
 
@@ -152,41 +132,6 @@ if(el) el.checked=data[id]
 })
 
 updateCharts()
-
-}
-
-// LOAD FROM GOOGLE SHEET
-function loadFromSheet(){
-
-fetch(SCRIPT_URL)
-.then(res=>res.json())
-.then(data=>{
-
-data.slice(1).forEach(row=>{
-
-let habit=row[1]
-let day=parseInt(row[2])
-let status=row[3]
-
-let habitIndex=habits.indexOf(habit)
-
-if(habitIndex>-1 && status===true || status==="true"){
-
-let id=`h${habitIndex}d${day}`
-
-let cb=document.getElementById(id)
-
-if(cb){
-
-cb.checked=true
-
-}
-
-}
-
-})
-
-})
 
 }
 
@@ -407,6 +352,10 @@ tbody.innerHTML+=`
 
 }
 
-// RUN ON LOAD
+// RUN
 loadData()
-loadFromSheet()
+
+// Firebase load
+if(typeof loadHabits==="function"){
+loadHabits()
+}

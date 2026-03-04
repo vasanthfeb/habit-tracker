@@ -112,6 +112,67 @@
 </div>
 
 <script src="script.js"></script>
+<script type="module">
 
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-database.js";
+
+const firebaseConfig = {
+apiKey: "AIzaSyBovv2JS2egaK-kvPTX3y_uBrYvsQ0cB4Q",
+authDomain: "habit-tracker-f294b.firebaseapp.com",
+databaseURL: "https://habit-tracker-f294b-default-rtdb.firebaseio.com",
+projectId: "habit-tracker-f294b",
+storageBucket: "habit-tracker-f294b.firebasestorage.app",
+messagingSenderId: "1003014872273",
+appId: "1:1003014872273:web:f2bbb8d8cc7a041c9d79f0",
+measurementId: "G-DQGLEQ5ZKJ"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+// save habit
+window.saveHabit = function(habit,day,status){
+
+set(ref(db,"habits/"+habit+"/"+day),status)
+
+}
+
+// load habits
+window.loadHabits = function(){
+
+onValue(ref(db,"habits"),(snapshot)=>{
+
+let data=snapshot.val()
+
+if(!data) return
+
+Object.keys(data).forEach(habit=>{
+
+let days=data[habit]
+
+Object.keys(days).forEach(day=>{
+
+if(days[day]){
+
+let habitIndex=habits.indexOf(habit)
+
+let id=`h${habitIndex}d${day}`
+
+let cb=document.getElementById(id)
+
+if(cb) cb.checked=true
+
+}
+
+})
+
+})
+
+})
+
+}
+
+</script>
 </body>
 </html>
